@@ -5,10 +5,18 @@ class FileProviderItem: NSObject, NSFileProviderItem {
     
     let file: String
     let parent: String?
+    let size: Int?
     
     init(file: String, parent: String?) {
         self.file = file
         self.parent = parent
+        size = nil
+    }
+    
+    init(info: FileInfo, parent: String?) {
+        file = info.name
+        self.parent = parent
+        size = info.size
     }
     
 }
@@ -64,7 +72,11 @@ extension FileProviderItem {
     }
     
     var documentSize: NSNumber? {
-        return NSNumber(value: 16)
+        guard let size = size else {
+            return nil
+        }
+        
+        return NSNumber(value: size)
     }
     
     var versionIdentifier: Data? {

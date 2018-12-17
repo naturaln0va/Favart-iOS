@@ -31,7 +31,7 @@ class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
                     return
                 }
                 
-                observer.didEnumerate(items.map({ FileProviderItem(file: $0, parent: nil) }))
+                observer.didEnumerate(items.map({ FileProviderItem(info: $0, parent: nil) }))
             }
         }
         else {

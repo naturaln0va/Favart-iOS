@@ -6,7 +6,7 @@ final class NetworkClient {
     static let shared = NetworkClient()
     
     typealias BasicCompletionBlock = (Error?) -> Void
-    typealias MediaCompletionBlock = ([String], Error?) -> Void
+    typealias MediaCompletionBlock = ([FileInfo], Error?) -> Void
     
     private let baseURLString = "http://localhost:8080"
     
@@ -65,11 +65,13 @@ final class NetworkClient {
         }
         
         request.completionBlock = {
-            var items = [String]()
+            var items = [FileInfo]()
             var error: Error?
             
+            let decoder = JSONDecoder()
+            
             do {
-                items = try JSONSerialization.jsonObject(with: request.resultData, options: .allowFragments) as? [String] ?? []
+                items = try decoder.decode([FileInfo].self, from: request.resultData)
             }
             catch let parseError {
                 error = self.errorFrom(request: request) ?? parseError
