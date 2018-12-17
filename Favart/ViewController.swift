@@ -7,6 +7,10 @@ class ViewController: UIViewController {
         super.viewDidLoad()
 
         view.backgroundColor = .magenta
+        
+        NetworkClient.shared.getMedia(at: nil) { items, error in
+            print("Fetched items: \(items)")
+        }
     }
 
 }

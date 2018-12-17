@@ -11,7 +11,45 @@
 		4829860421C6BFCA0058F246 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4829860321C6BFCA0058F246 /* ViewController.swift */; };
 		4829860921C6BFCB0058F246 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4829860821C6BFCB0058F246 /* Assets.xcassets */; };
 		4829860C21C6BFCB0058F246 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4829860A21C6BFCB0058F246 /* LaunchScreen.storyboard */; };
+		48CAD73F21C6C14900F10C87 /* FileProviderExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CAD73E21C6C14900F10C87 /* FileProviderExtension.swift */; };
+		48CAD74121C6C14900F10C87 /* FileProviderItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CAD74021C6C14900F10C87 /* FileProviderItem.swift */; };
+		48CAD74321C6C14900F10C87 /* FileProviderEnumerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CAD74221C6C14900F10C87 /* FileProviderEnumerator.swift */; };
+		48CAD74821C6C14900F10C87 /* Provider.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 48CAD73C21C6C14900F10C87 /* Provider.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		48CAD74F21C6F8D300F10C87 /* String+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CAD74E21C6F8D300F10C87 /* String+Additions.swift */; };
+		48CAD75021C6F8D300F10C87 /* String+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CAD74E21C6F8D300F10C87 /* String+Additions.swift */; };
+		48CAD75221C6FB0000F10C87 /* NetworkRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CAD75121C6FB0000F10C87 /* NetworkRequest.swift */; };
+		48CAD75321C6FB0000F10C87 /* NetworkRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CAD75121C6FB0000F10C87 /* NetworkRequest.swift */; };
+		48CAD75521C6FB3E00F10C87 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CAD75421C6FB3E00F10C87 /* NetworkError.swift */; };
+		48CAD75621C6FB3E00F10C87 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CAD75421C6FB3E00F10C87 /* NetworkError.swift */; };
+		48CAD75821C6FB6800F10C87 /* Dictionary+QueryParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CAD75721C6FB6800F10C87 /* Dictionary+QueryParams.swift */; };
+		48CAD75921C6FB6800F10C87 /* Dictionary+QueryParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CAD75721C6FB6800F10C87 /* Dictionary+QueryParams.swift */; };
+		48CAD75D21C6FC2400F10C87 /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CAD75C21C6FC2400F10C87 /* NetworkClient.swift */; };
+		48CAD75E21C6FC2400F10C87 /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CAD75C21C6FC2400F10C87 /* NetworkClient.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		48CAD74621C6C14900F10C87 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 482985F621C6BFCA0058F246 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 48CAD73B21C6C14900F10C87;
+			remoteInfo = Provider;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		48CAD74C21C6C14900F10C87 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				48CAD74821C6C14900F10C87 /* Provider.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		482985FE21C6BFCA0058F246 /* Favart.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Favart.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -20,10 +58,28 @@
 		4829860821C6BFCB0058F246 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4829860B21C6BFCB0058F246 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4829860D21C6BFCB0058F246 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		48CAD73C21C6C14900F10C87 /* Provider.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Provider.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		48CAD73E21C6C14900F10C87 /* FileProviderExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileProviderExtension.swift; sourceTree = "<group>"; };
+		48CAD74021C6C14900F10C87 /* FileProviderItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileProviderItem.swift; sourceTree = "<group>"; };
+		48CAD74221C6C14900F10C87 /* FileProviderEnumerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileProviderEnumerator.swift; sourceTree = "<group>"; };
+		48CAD74421C6C14900F10C87 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		48CAD74521C6C14900F10C87 /* Provider.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Provider.entitlements; sourceTree = "<group>"; };
+		48CAD74E21C6F8D300F10C87 /* String+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Additions.swift"; sourceTree = "<group>"; };
+		48CAD75121C6FB0000F10C87 /* NetworkRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkRequest.swift; sourceTree = "<group>"; };
+		48CAD75421C6FB3E00F10C87 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
+		48CAD75721C6FB6800F10C87 /* Dictionary+QueryParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+QueryParams.swift"; sourceTree = "<group>"; };
+		48CAD75C21C6FC2400F10C87 /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		482985FB21C6BFCA0058F246 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		48CAD73921C6C14900F10C87 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -37,6 +93,8 @@
 			isa = PBXGroup;
 			children = (
 				4829860021C6BFCA0058F246 /* Favart */,
+				48CAD74D21C6F8B700F10C87 /* Shared */,
+				48CAD73D21C6C14900F10C87 /* Provider */,
 				482985FF21C6BFCA0058F246 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -45,6 +103,7 @@
 			isa = PBXGroup;
 			children = (
 				482985FE21C6BFCA0058F246 /* Favart.app */,
+				48CAD73C21C6C14900F10C87 /* Provider.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -69,6 +128,46 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		48CAD73D21C6C14900F10C87 /* Provider */ = {
+			isa = PBXGroup;
+			children = (
+				48CAD73E21C6C14900F10C87 /* FileProviderExtension.swift */,
+				48CAD74021C6C14900F10C87 /* FileProviderItem.swift */,
+				48CAD74221C6C14900F10C87 /* FileProviderEnumerator.swift */,
+				48CAD74421C6C14900F10C87 /* Info.plist */,
+				48CAD74521C6C14900F10C87 /* Provider.entitlements */,
+			);
+			path = Provider;
+			sourceTree = "<group>";
+		};
+		48CAD74D21C6F8B700F10C87 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				48CAD75C21C6FC2400F10C87 /* NetworkClient.swift */,
+				48CAD75B21C6FC0A00F10C87 /* Extensions */,
+				48CAD75A21C6FBDE00F10C87 /* Networking */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		48CAD75A21C6FBDE00F10C87 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				48CAD75121C6FB0000F10C87 /* NetworkRequest.swift */,
+				48CAD75421C6FB3E00F10C87 /* NetworkError.swift */,
+			);
+			name = Networking;
+			sourceTree = "<group>";
+		};
+		48CAD75B21C6FC0A00F10C87 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				48CAD74E21C6F8D300F10C87 /* String+Additions.swift */,
+				48CAD75721C6FB6800F10C87 /* Dictionary+QueryParams.swift */,
+			);
+			name = Extensions;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -79,15 +178,34 @@
 				482985FA21C6BFCA0058F246 /* Sources */,
 				482985FB21C6BFCA0058F246 /* Frameworks */,
 				482985FC21C6BFCA0058F246 /* Resources */,
+				48CAD74C21C6C14900F10C87 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				48CAD74721C6C14900F10C87 /* PBXTargetDependency */,
 			);
 			name = Favart;
 			productName = Favart;
 			productReference = 482985FE21C6BFCA0058F246 /* Favart.app */;
 			productType = "com.apple.product-type.application";
+		};
+		48CAD73B21C6C14900F10C87 /* Provider */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 48CAD74921C6C14900F10C87 /* Build configuration list for PBXNativeTarget "Provider" */;
+			buildPhases = (
+				48CAD73821C6C14900F10C87 /* Sources */,
+				48CAD73921C6C14900F10C87 /* Frameworks */,
+				48CAD73A21C6C14900F10C87 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Provider;
+			productName = Provider;
+			productReference = 48CAD73C21C6C14900F10C87 /* Provider.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -100,6 +218,9 @@
 				ORGANIZATIONNAME = "Ryan Ackermann";
 				TargetAttributes = {
 					482985FD21C6BFCA0058F246 = {
+						CreatedOnToolsVersion = 10.1;
+					};
+					48CAD73B21C6C14900F10C87 = {
 						CreatedOnToolsVersion = 10.1;
 					};
 				};
@@ -118,6 +239,7 @@
 			projectRoot = "";
 			targets = (
 				482985FD21C6BFCA0058F246 /* Favart */,
+				48CAD73B21C6C14900F10C87 /* Provider */,
 			);
 		};
 /* End PBXProject section */
@@ -132,6 +254,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		48CAD73A21C6C14900F10C87 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -141,10 +270,38 @@
 			files = (
 				4829860421C6BFCA0058F246 /* ViewController.swift in Sources */,
 				4829860221C6BFCA0058F246 /* AppDelegate.swift in Sources */,
+				48CAD75221C6FB0000F10C87 /* NetworkRequest.swift in Sources */,
+				48CAD74F21C6F8D300F10C87 /* String+Additions.swift in Sources */,
+				48CAD75D21C6FC2400F10C87 /* NetworkClient.swift in Sources */,
+				48CAD75821C6FB6800F10C87 /* Dictionary+QueryParams.swift in Sources */,
+				48CAD75521C6FB3E00F10C87 /* NetworkError.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		48CAD73821C6C14900F10C87 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				48CAD73F21C6C14900F10C87 /* FileProviderExtension.swift in Sources */,
+				48CAD74121C6C14900F10C87 /* FileProviderItem.swift in Sources */,
+				48CAD75921C6FB6800F10C87 /* Dictionary+QueryParams.swift in Sources */,
+				48CAD75021C6F8D300F10C87 /* String+Additions.swift in Sources */,
+				48CAD75621C6FB3E00F10C87 /* NetworkError.swift in Sources */,
+				48CAD74321C6C14900F10C87 /* FileProviderEnumerator.swift in Sources */,
+				48CAD75321C6FB0000F10C87 /* NetworkRequest.swift in Sources */,
+				48CAD75E21C6FC2400F10C87 /* NetworkClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		48CAD74721C6C14900F10C87 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 48CAD73B21C6C14900F10C87 /* Provider */;
+			targetProxy = 48CAD74621C6C14900F10C87 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		4829860A21C6BFCB0058F246 /* LaunchScreen.storyboard */ = {
@@ -277,6 +434,7 @@
 		4829861121C6BFCB0058F246 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = WK4Y48HVH2;
@@ -295,6 +453,7 @@
 		4829861221C6BFCB0058F246 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = WK4Y48HVH2;
@@ -305,6 +464,46 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.ackermann.Favart;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		48CAD74A21C6C14900F10C87 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Provider/Provider.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = WK4Y48HVH2;
+				INFOPLIST_FILE = Provider/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.ackermann.Favart.Provider;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		48CAD74B21C6C14900F10C87 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Provider/Provider.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = WK4Y48HVH2;
+				INFOPLIST_FILE = Provider/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.ackermann.Favart.Provider;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -327,6 +526,15 @@
 			buildConfigurations = (
 				4829861121C6BFCB0058F246 /* Debug */,
 				4829861221C6BFCB0058F246 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		48CAD74921C6C14900F10C87 /* Build configuration list for PBXNativeTarget "Provider" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				48CAD74A21C6C14900F10C87 /* Debug */,
+				48CAD74B21C6C14900F10C87 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
