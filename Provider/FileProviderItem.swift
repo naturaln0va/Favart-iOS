@@ -3,20 +3,39 @@ import FileProvider
 
 class FileProviderItem: NSObject, NSFileProviderItem {
     
-    let file: String
+    let name: String
     let parent: String?
     let size: Int?
     
-    init(file: String, parent: String?) {
-        self.file = file
+    var isDirectory: Bool {
+        return name.components(separatedBy: ".").count == 1
+    }
+    
+    static var rootItem: FileProviderItem {
+        return FileProviderItem(name: "", parent: nil)
+    }
+
+    init(name: String, parent: String?) {
+        self.name = name
         self.parent = parent
         size = nil
     }
     
     init(info: FileInfo, parent: String?) {
-        file = info.name
+        name = info.name
         self.parent = parent
         size = info.size
+    }
+    
+    convenience init?(identifier: NSFileProviderItemIdentifier) {
+        var comps = identifier.rawValue.base64Decoded.components(separatedBy: "+")
+        
+        guard let name = comps.popLast() else {
+            return nil
+        }
+        
+        let parent = comps.isEmpty ? nil : comps.joined(separator: "+")
+        self.init(name: name, parent: parent)
     }
     
 }
@@ -24,11 +43,12 @@ class FileProviderItem: NSObject, NSFileProviderItem {
 extension FileProviderItem {
     
     var itemIdentifier: NSFileProviderItemIdentifier {
-        var comps = [file]
+        var comps = [String]()
         
-        if let parent = parent {
-            comps.insert(parent, at: 0)
+        if let encodedParent = parent {
+            comps.append(encodedParent)
         }
+        comps.append(name)
         
         let key = comps.joined(separator: "+")
         return NSFileProviderItemIdentifier(key.base64Encoded)
@@ -47,11 +67,11 @@ extension FileProviderItem {
     }
     
     var filename: String {
-        return file
+        return name
     }
     
     var typeIdentifier: String {
-        let comps = file.components(separatedBy: ".")
+        let comps = name.components(separatedBy: ".")
         
         if comps.count == 1 {
             return "public.folder"

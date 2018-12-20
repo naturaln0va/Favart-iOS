@@ -6,6 +6,7 @@ class FileProviderExtension: NSFileProviderExtension {
     enum FileError: Error {
         case invalidFormat
         case identifierNotFound
+        case unexpectedProviderItem
     }
     
     var fileManager = FileManager()
@@ -14,25 +15,19 @@ class FileProviderExtension: NSFileProviderExtension {
         super.init()
     }
     
-    override func item(for identifier: NSFileProviderItemIdentifier) throws -> NSFileProviderItem {
-        print("INFO: Creating the item for: \(identifier.rawValue)")
-        
+    override func item(for identifier: NSFileProviderItemIdentifier) throws -> NSFileProviderItem {        
         if identifier == .rootContainer {
-            return FileProviderItem(file: "", parent: nil)
+            return FileProviderItem.rootItem
         }
-
-        let comps = identifier.rawValue.components(separatedBy: "+")
         
-        guard let file = comps.first, let parent = comps.last else {
+        guard let item = FileProviderItem(identifier: identifier) else {
             throw FileError.invalidFormat
         }
         
-        return FileProviderItem(file: file, parent: parent)
+        return item
     }
     
     override func urlForItem(withPersistentIdentifier identifier: NSFileProviderItemIdentifier) -> URL? {
-        print("INFO: Creating the url for an item with: \(identifier.rawValue)")
-
         // resolve the given identifier to a file on disk
         guard let item = try? item(for: identifier) else {
             return nil
@@ -46,8 +41,6 @@ class FileProviderExtension: NSFileProviderExtension {
     }
     
     override func persistentIdentifierForItem(at url: URL) -> NSFileProviderItemIdentifier? {
-        print("INFO: Creating the identifier for an item at: \(url.absoluteString)")
-
         // resolve the given URL to a persistent identifier using a database
         let pathComponents = url.pathComponents
         
@@ -169,16 +162,30 @@ class FileProviderExtension: NSFileProviderExtension {
         print("INFO: Creating an enumerator for: \(containerItemIdentifier.rawValue)")
 
         let maybeEnumerator: NSFileProviderEnumerator? = nil
-        if containerItemIdentifier == NSFileProviderItemIdentifier.rootContainer {
-            return FileProviderEnumerator(enumeratedItemIdentifier: containerItemIdentifier)
+        
+        if containerItemIdentifier == .rootContainer {
+            return FileProviderEnumerator(identifier: containerItemIdentifier)
         }
-        else if containerItemIdentifier == NSFileProviderItemIdentifier.workingSet {
+        else if containerItemIdentifier == .workingSet {
             // TODO: instantiate an enumerator for the working set
         }
         else {
-            // TODO: determine if the item is a directory or a file
-            // - for a directory, instantiate an enumerator of its subitems
-            // - for a file, instantiate an enumerator that observes changes to the file
+            do {
+                if let providerItem = try item(for: containerItemIdentifier) as? FileProviderItem {
+                    if providerItem.isDirectory {
+                        return FileProviderEnumerator(identifier: containerItemIdentifier)
+                    }
+                    else {
+                        throw NSError(domain: NSCocoaErrorDomain, code: NSFeatureUnsupportedError, userInfo:[:])
+                    }
+                }
+                else {
+                    throw FileError.unexpectedProviderItem
+                }
+            }
+            catch {
+                throw FileError.unexpectedProviderItem
+            }
         }
         
         guard let enumerator = maybeEnumerator else {
