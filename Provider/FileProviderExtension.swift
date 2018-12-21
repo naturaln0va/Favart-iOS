@@ -4,7 +4,6 @@ import FileProvider
 class FileProviderExtension: NSFileProviderExtension {
     
     enum FileError: Error {
-        case invalidFormat
         case identifierNotFound
         case unexpectedProviderItem
     }
@@ -13,6 +12,7 @@ class FileProviderExtension: NSFileProviderExtension {
     
     override init() {
         super.init()
+        
     }
     
     override func item(for identifier: NSFileProviderItemIdentifier) throws -> NSFileProviderItem {        
@@ -21,23 +21,26 @@ class FileProviderExtension: NSFileProviderExtension {
         }
         
         guard let item = FileProviderItem(identifier: identifier) else {
-            throw FileError.invalidFormat
+            throw NSFileProviderError(.noSuchItem)
         }
         
         return item
     }
     
     override func urlForItem(withPersistentIdentifier identifier: NSFileProviderItemIdentifier) -> URL? {
-        // resolve the given identifier to a file on disk
-        guard let item = try? item(for: identifier) else {
+        do {
+            guard let item = try item(for: identifier) as? FileProviderItem else {
+                return nil
+            }
+            
+            let manager = NSFileProviderManager.default
+            let rootItemURL = manager.documentStorageURL.appendingPathComponent(identifier.rawValue, isDirectory: true)
+            
+            return rootItemURL.appendingPathComponent(item.filename, isDirectory: item.isDirectory)
+        }
+        catch {
             return nil
         }
-        
-        // in this implementation, all paths are structured as <base storage directory>/<item identifier>/<item file name>
-        let manager = NSFileProviderManager.default
-        let perItemDirectory = manager.documentStorageURL.appendingPathComponent(identifier.rawValue, isDirectory: true)
-        
-        return perItemDirectory.appendingPathComponent(item.filename, isDirectory: false)
     }
     
     override func persistentIdentifierForItem(at url: URL) -> NSFileProviderItemIdentifier? {
@@ -52,16 +55,21 @@ class FileProviderExtension: NSFileProviderExtension {
     }
     
     override func providePlaceholder(at url: URL, completionHandler: @escaping (Error?) -> Void) {
-        print("INFO: Starting to provide a placeholder for an item at: \(url.absoluteString)")
-
         guard let identifier = persistentIdentifierForItem(at: url) else {
             completionHandler(NSFileProviderError(.noSuchItem))
             return
         }
-
+        
         do {
             let fileProviderItem = try item(for: identifier)
             let placeholderURL = NSFileProviderManager.placeholderURL(for: url)
+            
+            // this was tricky, https://forums.developer.apple.com/thread/89113
+            let placeholderDirectory = placeholderURL.deletingLastPathComponent()
+            if !fileManager.fileExists(atPath: placeholderDirectory.path) {
+                try fileManager.createDirectory(at: placeholderDirectory, withIntermediateDirectories: true, attributes: nil)
+            }
+
             try NSFileProviderManager.writePlaceholder(at: placeholderURL, withMetadata: fileProviderItem)
             completionHandler(nil)
         }
@@ -71,65 +79,24 @@ class FileProviderExtension: NSFileProviderExtension {
     }
 
     override func startProvidingItem(at url: URL, completionHandler: @escaping ((_ error: Error?) -> Void)) {
-        guard let itemID = persistentIdentifierForItem(at: url) else {
-            completionHandler(FileError.identifierNotFound)
+        guard let identifier = persistentIdentifierForItem(at: url) else {
+            completionHandler(NSFileProviderError(.noSuchItem))
             return
         }
         
-        print("INFO: Starting to provide item at: \(url.absoluteString) for \(itemID)")
-
-        // Should ensure that the actual file is in the position returned by URLForItemWithIdentifier:, then call the completion handler
+        let path = identifier.rawValue.base64Decoded.replacingOccurrences(of: "+", with: "/")
         
-        /* TODO:
-         This is one of the main entry points of the file provider. We need to check whether the file already exists on disk,
-         whether we know of a more recent version of the file, and implement a policy for these cases. Pseudocode:
-         
-         if !fileOnDisk {
-             downloadRemoteFile()
-             callCompletion(downloadErrorOrNil)
-         } else if fileIsCurrent {
-             callCompletion(nil)
-         } else {
-             if localFileHasChanges {
-                 // in this case, a version of the file is on disk, but we know of a more recent version
-                 // we need to implement a strategy to resolve this conflict
-                 moveLocalFileAside()
-                 scheduleUploadOfLocalFile()
-                 downloadRemoteFile()
-                 callCompletion(downloadErrorOrNil)
-             } else {
-                 downloadRemoteFile()
-                 callCompletion(downloadErrorOrNil)
-             }
-         }
-         */
-        
-        completionHandler(NSError(domain: NSCocoaErrorDomain, code: NSFeatureUnsupportedError, userInfo:[:]))
-    }
-    
-    
-    override func itemChanged(at url: URL) {
-        print("INFO: Item was changed at: \(url.absoluteString)")
-        
-        // Called at some point after the file has changed; the provider may then trigger an upload
-        
-        /* TODO:
-         - mark file at <url> as needing an update in the model
-         - if there are existing NSURLSessionTasks uploading this file, cancel them
-         - create a fresh background NSURLSessionTask and schedule it to upload the current modifications
-         - register the NSURLSessionTask with NSFileProviderManager to provide progress updates
-         */
+        if !fileManager.fileExists(atPath: url.path) {
+            NetworkClient.shared.downloadFile(at: path, to: url) { error in
+                completionHandler(error)
+            }
+        }
+        else {
+            completionHandler(nil)
+        }
     }
     
     override func stopProvidingItem(at url: URL) {
-        print("INFO: Stopping the provided item at: \(url.absoluteString)")
-
-        // Called after the last claim to the file has been released. At this point, it is safe for the file provider to remove the content file.
-        // Care should be taken that the corresponding placeholder file stays behind after the content file has been deleted.
-        
-        // Called after the last claim to the file has been released. At this point, it is safe for the file provider to remove the content file.
-        
-        // TODO: look up whether the file has local changes
         let fileHasLocalChanges = false
         
         if !fileHasLocalChanges {
@@ -159,8 +126,6 @@ class FileProviderExtension: NSFileProviderExtension {
     // MARK: - Enumeration
     
     override func enumerator(for containerItemIdentifier: NSFileProviderItemIdentifier) throws -> NSFileProviderEnumerator {
-        print("INFO: Creating an enumerator for: \(containerItemIdentifier.rawValue)")
-
         let maybeEnumerator: NSFileProviderEnumerator? = nil
         
         if containerItemIdentifier == .rootContainer {
@@ -193,5 +158,11 @@ class FileProviderExtension: NSFileProviderExtension {
         }
         return enumerator
     }
+    
+//    override func fetchThumbnails(for itemIdentifiers: [NSFileProviderItemIdentifier], requestedSize size: CGSize, perThumbnailCompletionHandler: @escaping (NSFileProviderItemIdentifier, Data?, Error?) -> Void, completionHandler: @escaping (Error?) -> Void) -> Progress {
+//        print("INFO: Requesting thumbnails for: \(itemIdentifiers.map({ $0.rawValue })).")
+//
+//        return Progress(totalUnitCount: 0)
+//    }
     
 }

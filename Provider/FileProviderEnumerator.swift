@@ -7,7 +7,6 @@ class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
     
     init(identifier: NSFileProviderItemIdentifier) {
         self.identifier = identifier
-        print("Creating a enumerator with identifier: \(identifier.rawValue)")
         super.init()
     }
 
@@ -28,11 +27,8 @@ class FileProviderEnumerator: NSObject, NSFileProviderEnumerator {
             parent = identifier.rawValue.base64Decoded
         }
         
-        print("Enumerating for: \(identifier.rawValue), calculated path: \(path ?? "n/a") for: \(parent ?? "n/a").")
-        
         NetworkClient.shared.getMedia(at: path) { items, error in
             if let error = error {
-                print("Failed the enumeration request: \(error)")
                 observer.finishEnumeratingWithError(error)
                 return
             }

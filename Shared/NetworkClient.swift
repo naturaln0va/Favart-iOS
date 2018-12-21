@@ -13,7 +13,10 @@ final class NetworkClient {
     private var mediaURLString: String {
         return [baseURLString, "media"].joined(separator: "/")
     }
-    
+    private var fileURLString: String {
+        return [baseURLString, "file"].joined(separator: "/")
+    }
+
     private let underlyingRequestQueue = DispatchQueue(label: "favart.networking")
     
     private lazy var requestsQueue: OperationQueue = {
@@ -83,6 +86,48 @@ final class NetworkClient {
         }
         
         requestsQueue.addOperation(request)
+    }
+    
+    func downloadFile(at path: String, to destinationURL: URL, completion: BasicCompletionBlock?) {
+        var pathComps = path.components(separatedBy: "/")
+        
+        guard let name = pathComps.popLast() else {
+            completion?(NetworkError.unexpectedError)
+            return
+        }
+        
+        var getParams = [
+            "id": name
+        ]
+
+        let pathValue = pathComps.joined(separator: "/")
+        if !pathValue.isEmpty {
+            getParams["path"] = pathValue
+        }
+
+        let finalURLString = fileURLString + "?" + getParams.stringFromHttpParameters()
+        
+        guard let requestURL = URL(string: finalURLString) else {
+            completion?(NetworkError.unexpectedError)
+            return
+        }
+        
+        let task = URLSession.shared.downloadTask(with: requestURL) { url, resp, error in
+            var taskError = error
+            
+            if let url = url {
+                do {
+                    try FileManager.default.copyItem(at: url, to: destinationURL)
+                }
+                catch {
+                    taskError = error
+                }
+            }
+            
+            completion?(taskError)
+        }
+        
+        task.resume()
     }
     
 }
