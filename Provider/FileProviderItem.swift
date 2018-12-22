@@ -43,6 +43,10 @@ class FileProviderItem: NSObject, NSFileProviderItem {
 extension FileProviderItem {
     
     var itemIdentifier: NSFileProviderItemIdentifier {
+        guard !name.isEmpty else {
+            return .rootContainer
+        }
+        
         var comps = [String]()
         
         if let encodedParent = parent {
