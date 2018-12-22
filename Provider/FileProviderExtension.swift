@@ -159,10 +159,52 @@ class FileProviderExtension: NSFileProviderExtension {
         return enumerator
     }
     
-//    override func fetchThumbnails(for itemIdentifiers: [NSFileProviderItemIdentifier], requestedSize size: CGSize, perThumbnailCompletionHandler: @escaping (NSFileProviderItemIdentifier, Data?, Error?) -> Void, completionHandler: @escaping (Error?) -> Void) -> Progress {
-//        print("INFO: Requesting thumbnails for: \(itemIdentifiers.map({ $0.rawValue })).")
-//
-//        return Progress(totalUnitCount: 0)
-//    }
+    override func fetchThumbnails(for itemIdentifiers: [NSFileProviderItemIdentifier], requestedSize size: CGSize, perThumbnailCompletionHandler: @escaping (NSFileProviderItemIdentifier, Data?, Error?) -> Void, completionHandler: @escaping (Error?) -> Void) -> Progress {
+        print("INFO: Requesting thumbnails for: \(itemIdentifiers.map({ $0.rawValue })).")
+        
+        let urlSession = URLSession(configuration: .default)
+        let progress = Progress(totalUnitCount: Int64(itemIdentifiers.count))
+        
+        for identifier in itemIdentifiers {
+            let path = identifier.rawValue.base64Decoded.replacingOccurrences(of: "+", with: "/")
+            
+            guard let requestURL = NetworkClient.buildContentURL(for: path, isPreview: true) else {
+                continue
+            }
+            
+            let downloadTask = urlSession.downloadTask(with: requestURL) { tempFileURL, response, error in
+                guard !progress.isCancelled else {
+                    return
+                }
+                
+                var finalError = error
+                var processedFileData: Data? = nil
+                
+                if let fileURL = tempFileURL {
+                    do {
+                        processedFileData = try Data(contentsOf: fileURL, options: .alwaysMapped)
+                    }
+                    catch {
+                        finalError = error
+                    }
+                }
+                
+                perThumbnailCompletionHandler(identifier, processedFileData, finalError)
+                
+                guard progress.isFinished else {
+                    return
+                }
+
+                DispatchQueue.main.async {
+                    completionHandler(nil)
+                }
+            }
+            
+            progress.addChild(downloadTask.progress, withPendingUnitCount: 1)
+            downloadTask.resume()
+        }
+        
+        return progress
+    }
     
 }
