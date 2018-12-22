@@ -8,13 +8,10 @@ final class NetworkClient {
     typealias BasicCompletionBlock = (Error?) -> Void
     typealias MediaCompletionBlock = ([FileInfo], Error?) -> Void
     
-    private let baseURLString = "http://localhost:8080"
+    private static let baseURLString = "https://pure-lake-51086.herokuapp.com"
     
     private var mediaURLString: String {
-        return [baseURLString, "media"].joined(separator: "/")
-    }
-    private var fileURLString: String {
-        return [baseURLString, "file"].joined(separator: "/")
+        return [NetworkClient.baseURLString, "media"].joined(separator: "/")
     }
 
     private let underlyingRequestQueue = DispatchQueue(label: "favart.networking")
@@ -56,6 +53,28 @@ final class NetworkClient {
         }
     }
     
+    static func buildContentURL(for path: String, isPreview: Bool) -> URL? {
+        var pathComps = path.components(separatedBy: "/")
+        
+        guard let name = pathComps.popLast() else {
+            return nil
+        }
+        
+        var getParams = [
+            "id": name
+        ]
+        
+        let pathValue = pathComps.joined(separator: "/")
+        if !pathValue.isEmpty {
+            getParams["path"] = pathValue
+        }
+        
+        let resource = isPreview ? "preview" : "file"
+        let finalURLString = String(format: "%@/%@?%@", baseURLString, resource, getParams.stringFromHttpParameters())
+        
+        return URL(string: finalURLString)
+    }
+    
     // MARK: - Requests
     
     func getMedia(at path: String?, completion: @escaping MediaCompletionBlock) {
@@ -89,35 +108,17 @@ final class NetworkClient {
     }
     
     func downloadFile(at path: String, to destinationURL: URL, completion: BasicCompletionBlock?) {
-        var pathComps = path.components(separatedBy: "/")
-        
-        guard let name = pathComps.popLast() else {
+        guard let requestURL = NetworkClient.buildContentURL(for: path, isPreview: false) else {
             completion?(NetworkError.unexpectedError)
             return
         }
         
-        var getParams = [
-            "id": name
-        ]
-
-        let pathValue = pathComps.joined(separator: "/")
-        if !pathValue.isEmpty {
-            getParams["path"] = pathValue
-        }
-
-        let finalURLString = fileURLString + "?" + getParams.stringFromHttpParameters()
-        
-        guard let requestURL = URL(string: finalURLString) else {
-            completion?(NetworkError.unexpectedError)
-            return
-        }
-        
-        let task = URLSession.shared.downloadTask(with: requestURL) { url, resp, error in
+        let task = URLSession.shared.downloadTask(with: requestURL) { tempFileURL, response, error in
             var taskError = error
             
-            if let url = url {
+            if let fileURL = tempFileURL {
                 do {
-                    try FileManager.default.copyItem(at: url, to: destinationURL)
+                    try FileManager.default.copyItem(at: fileURL, to: destinationURL)
                 }
                 catch {
                     taskError = error
