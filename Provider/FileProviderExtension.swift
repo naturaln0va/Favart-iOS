@@ -4,18 +4,12 @@ import FileProvider
 class FileProviderExtension: NSFileProviderExtension {
     
     enum FileError: Error {
-        case identifierNotFound
         case unexpectedProviderItem
     }
     
     var fileManager = FileManager()
     
-    override init() {
-        super.init()
-        
-    }
-    
-    override func item(for identifier: NSFileProviderItemIdentifier) throws -> NSFileProviderItem {        
+    override func item(for identifier: NSFileProviderItemIdentifier) throws -> NSFileProviderItem {
         if identifier == .rootContainer {
             return FileProviderItem.rootItem
         }
@@ -100,17 +94,17 @@ class FileProviderExtension: NSFileProviderExtension {
         let fileHasLocalChanges = false
         
         if !fileHasLocalChanges {
-            // remove the existing file to free up space
             do {
                 _ = try FileManager.default.removeItem(at: url)
-            } catch {
+            }
+            catch {
                 // Handle error
             }
             
             // write out a placeholder to facilitate future property lookups
-            self.providePlaceholder(at: url, completionHandler: { error in
+            providePlaceholder(at: url) { error in
                 // TODO: handle any error, do any necessary cleanup
-            })
+            }
         }
     }
     
@@ -125,14 +119,9 @@ class FileProviderExtension: NSFileProviderExtension {
     
     // MARK: - Enumeration
     
-    override func enumerator(for containerItemIdentifier: NSFileProviderItemIdentifier) throws -> NSFileProviderEnumerator {
-        let maybeEnumerator: NSFileProviderEnumerator? = nil
-        
+    override func enumerator(for containerItemIdentifier: NSFileProviderItemIdentifier) throws -> NSFileProviderEnumerator {        
         if containerItemIdentifier == .rootContainer {
             return FileProviderEnumerator(identifier: containerItemIdentifier)
-        }
-        else if containerItemIdentifier == .workingSet {
-            // TODO: instantiate an enumerator for the working set
         }
         else {
             do {
@@ -152,16 +141,9 @@ class FileProviderExtension: NSFileProviderExtension {
                 throw FileError.unexpectedProviderItem
             }
         }
-        
-        guard let enumerator = maybeEnumerator else {
-            throw NSError(domain: NSCocoaErrorDomain, code: NSFeatureUnsupportedError, userInfo:[:])
-        }
-        return enumerator
     }
     
     override func fetchThumbnails(for itemIdentifiers: [NSFileProviderItemIdentifier], requestedSize size: CGSize, perThumbnailCompletionHandler: @escaping (NSFileProviderItemIdentifier, Data?, Error?) -> Void, completionHandler: @escaping (Error?) -> Void) -> Progress {
-        print("INFO: Requesting thumbnails for: \(itemIdentifiers.map({ $0.rawValue })).")
-        
         let urlSession = URLSession(configuration: .default)
         let progress = Progress(totalUnitCount: Int64(itemIdentifiers.count))
         
