@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ViewController" customModule="Favart" customModuleProvider="target">
+            <connections>
+                <outlet property="view" destination="iN0-l3-epB" id="xRw-AA-oqT"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Additionally make sure that the extension is enabled." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CSZ-fG-eip">
+                    <rect key="frame" x="40" y="165" width="295" height="41"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Example" translatesAutoresizingMaskIntoConstraints="NO" id="QZ6-IJ-ArC">
+                    <rect key="frame" x="20" y="226" width="335" height="180"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="180" id="niF-ew-2od"/>
+                    </constraints>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Open the Files app" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zpy-Qd-cay">
+                    <rect key="frame" x="82.5" y="105" width="210" height="32"/>
+                    <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="QZ6-IJ-ArC" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="AWf-iJ-ajJ"/>
+                <constraint firstItem="QZ6-IJ-ArC" firstAttribute="top" secondItem="CSZ-fG-eip" secondAttribute="bottom" constant="20" id="BbT-qU-hMT"/>
+                <constraint firstItem="CSZ-fG-eip" firstAttribute="top" secondItem="Zpy-Qd-cay" secondAttribute="bottom" constant="28" id="LGk-0H-MLL"/>
+                <constraint firstItem="CSZ-fG-eip" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="40" id="Pda-aY-W4e"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="QZ6-IJ-ArC" secondAttribute="trailing" constant="20" id="WwB-hN-3z7"/>
+                <constraint firstItem="Zpy-Qd-cay" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="85" id="aCG-td-vDv"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="CSZ-fG-eip" secondAttribute="trailing" constant="40" id="c9J-qD-aKr"/>
+                <constraint firstItem="Zpy-Qd-cay" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="waB-eL-Tcj"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <point key="canvasLocation" x="-266" y="116"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Example" width="750" height="385"/>
+    </resources>
+</document>
