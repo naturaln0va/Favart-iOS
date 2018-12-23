@@ -76,6 +76,32 @@ extension FileProviderExtension {
         }
     }
     
+    override func trashItem(withIdentifier itemIdentifier: NSFileProviderItemIdentifier, completionHandler: @escaping (NSFileProviderItem?, Error?) -> Void) {
+        do {
+            guard let item = try item(for: itemIdentifier) as? FileProviderItem else {
+                completionHandler(nil, NSFileProviderError(.noSuchItem))
+                return
+            }
+
+            item.isTrashed = true
+            completionHandler(item, nil)
+            
+            guard let url = urlForItem(withPersistentIdentifier: itemIdentifier) else {
+                completionHandler(nil, NSFileProviderError(.noSuchItem))
+                return
+            }
+            
+            try FileManager.default.removeItem(at: url)
+            
+            NetworkClient.shared.removeMedia(at: itemIdentifier.rawValue.base64Decoded.replacingOccurrences(of: "+", with: "/")) { error in
+                self.handleCompletedRequest(with: error, for: item.itemIdentifier)
+            }
+        }
+        catch {
+            completionHandler(nil, NSFileProviderError(.noSuchItem))
+        }
+    }
+    
     // MARK: - Helpers
     
     private func handleCompletedRequest(with error: Error?, for identifier: NSFileProviderItemIdentifier) {

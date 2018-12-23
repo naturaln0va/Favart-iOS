@@ -125,6 +125,22 @@ final class NetworkClient {
         requestsQueue.addOperation(request)
     }
     
+    func removeMedia(at path: String, completion: BasicCompletionBlock?) {
+        let request = NetworkRequest(.delete, urlString: mediaURLString)
+        
+        request.getParams = [
+            "path": path
+        ]
+        
+        request.completionBlock = {
+            DispatchQueue.main.async {
+                completion?(self.errorFrom(request: request))
+            }
+        }
+        
+        requestsQueue.addOperation(request)
+    }
+    
     func downloadFile(at path: String, to destinationURL: URL, completion: BasicCompletionBlock?) {
         guard let requestURL = NetworkClient.buildContentURL(for: path, isPreview: false) else {
             completion?(NetworkError.unexpectedError)

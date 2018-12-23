@@ -8,7 +8,8 @@ class FileProviderItem: NSObject, NSFileProviderItem {
     let size: Int?
     
     var lastUsedDate: Date?
-    
+    var isTrashed: Bool = false
+
     var isDirectory: Bool {
         return name.components(separatedBy: ".").count == 1
     }
