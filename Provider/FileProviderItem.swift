@@ -7,6 +7,8 @@ class FileProviderItem: NSObject, NSFileProviderItem {
     let parent: String?
     let size: Int?
     
+    var lastUsedDate: Date?
+    
     var isDirectory: Bool {
         return name.components(separatedBy: ".").count == 1
     }
@@ -19,16 +21,23 @@ class FileProviderItem: NSObject, NSFileProviderItem {
         self.name = name
         self.parent = parent
         size = nil
+        lastUsedDate = Date()
     }
     
     init(info: FileInfo, parent: String?) {
         name = info.name
         self.parent = parent
         size = info.size
+        lastUsedDate = Date()
     }
     
     convenience init?(identifier: NSFileProviderItemIdentifier) {
-        var comps = identifier.rawValue.base64Decoded.components(separatedBy: "+")
+        let decodedIdentifier = identifier.rawValue.base64Decoded
+        guard decodedIdentifier != identifier.rawValue else {
+            return nil
+        }
+        
+        var comps = decodedIdentifier.components(separatedBy: "+")
         
         guard let name = comps.popLast() else {
             return nil
@@ -104,8 +113,8 @@ extension FileProviderItem {
     }
     
     var versionIdentifier: Data? {
-        var initialVersion = 1
-        return Data(bytes: &initialVersion, count: MemoryLayout.size(ofValue: initialVersion))
+        var version = lastUsedDate?.timeIntervalSince1970 ?? 1
+        return Data(bytes: &version, count: MemoryLayout.size(ofValue: version))
     }
     
 }

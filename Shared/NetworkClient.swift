@@ -131,4 +131,22 @@ final class NetworkClient {
         task.resume()
     }
     
+    func uploadFile(from data: Data, to path: String, completion: BasicCompletionBlock?) {
+        guard let requestURL = NetworkClient.buildContentURL(for: path, isPreview: false) else {
+            completion?(NetworkError.unexpectedError)
+            return
+        }
+
+        var request = URLRequest(url: requestURL)
+        request.addValue("application/octet-stream", forHTTPHeaderField: "Content-Type")
+        request.httpMethod = "POST"
+        request.httpBody = data
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            completion?(error)
+        }
+        
+        task.resume()
+    }
+    
 }

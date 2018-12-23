@@ -3,11 +3,17 @@ import FileProvider
 
 class FileProviderExtension: NSFileProviderExtension {
     
-    enum FileError: Error {
+    private enum FileError: Error {
         case unexpectedProviderItem
     }
     
-    var fileManager = FileManager()
+    private lazy var fileManager = FileManager()
+    
+    internal lazy var fileCoordinator: NSFileCoordinator = {
+        let coordinator = NSFileCoordinator()
+        coordinator.purposeIdentifier = NSFileProviderManager.default.providerIdentifier
+        return coordinator
+    }()
     
     override func item(for identifier: NSFileProviderItemIdentifier) throws -> NSFileProviderItem {
         if identifier == .rootContainer {
@@ -49,20 +55,19 @@ class FileProviderExtension: NSFileProviderExtension {
     }
     
     override func providePlaceholder(at url: URL, completionHandler: @escaping (Error?) -> Void) {
-        guard let identifier = persistentIdentifierForItem(at: url) else {
+        guard let identifier = persistentIdentifierForItem(at: url), identifier != .rootContainer else {
             completionHandler(NSFileProviderError(.noSuchItem))
             return
         }
         
         do {
+            let urlParent = url.deletingLastPathComponent()
+            if !fileManager.fileExists(atPath: urlParent.path) { // this was tricky, https://forums.developer.apple.com/thread/89113
+                try fileManager.createDirectory(at: urlParent, withIntermediateDirectories: true, attributes: nil)
+            }
+
             let fileProviderItem = try item(for: identifier)
             let placeholderURL = NSFileProviderManager.placeholderURL(for: url)
-            
-            // this was tricky, https://forums.developer.apple.com/thread/89113
-            let placeholderDirectory = placeholderURL.deletingLastPathComponent()
-            if !fileManager.fileExists(atPath: placeholderDirectory.path) {
-                try fileManager.createDirectory(at: placeholderDirectory, withIntermediateDirectories: true, attributes: nil)
-            }
 
             try NSFileProviderManager.writePlaceholder(at: placeholderURL, withMetadata: fileProviderItem)
             completionHandler(nil)
@@ -91,35 +96,20 @@ class FileProviderExtension: NSFileProviderExtension {
     }
     
     override func stopProvidingItem(at url: URL) {
-        let fileHasLocalChanges = false
+        try? FileManager.default.removeItem(at: url)
         
-        if !fileHasLocalChanges {
-            do {
-                _ = try FileManager.default.removeItem(at: url)
-            }
-            catch {
-                // Handle error
+        providePlaceholder(at: url) { error in
+            guard let e = error else {
+                return
             }
             
-            // write out a placeholder to facilitate future property lookups
-            providePlaceholder(at: url) { error in
-                // TODO: handle any error, do any necessary cleanup
-            }
+            print("Error providing placeholder: \(e.localizedDescription)")
         }
     }
-    
-    // MARK: - Actions
-    
-    /* TODO: implement the actions for items here
-     each of the actions follows the same pattern:
-     - make a note of the change in the local model
-     - schedule a server request as a background task to inform the server of the change
-     - call the completion block with the modified item in its post-modification state
-     */
-    
+        
     // MARK: - Enumeration
     
-    override func enumerator(for containerItemIdentifier: NSFileProviderItemIdentifier) throws -> NSFileProviderEnumerator {        
+    override func enumerator(for containerItemIdentifier: NSFileProviderItemIdentifier) throws -> NSFileProviderEnumerator {
         if containerItemIdentifier == .rootContainer {
             return FileProviderEnumerator(identifier: containerItemIdentifier)
         }

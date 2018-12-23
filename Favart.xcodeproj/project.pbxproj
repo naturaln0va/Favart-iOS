@@ -27,6 +27,7 @@
 		48CAD75E21C6FC2400F10C87 /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CAD75C21C6FC2400F10C87 /* NetworkClient.swift */; };
 		F4CAEEA321C7458A009E677B /* FileInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CAEEA221C7458A009E677B /* FileInfo.swift */; };
 		F4CAEEA421C7458A009E677B /* FileInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CAEEA221C7458A009E677B /* FileInfo.swift */; };
+		F4D3CB6B21CF07B2001582F2 /* FileProviderExtension+Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D3CB6A21CF07B2001582F2 /* FileProviderExtension+Actions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,6 +73,7 @@
 		48CAD75721C6FB6800F10C87 /* Dictionary+QueryParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+QueryParams.swift"; sourceTree = "<group>"; };
 		48CAD75C21C6FC2400F10C87 /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
 		F4CAEEA221C7458A009E677B /* FileInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileInfo.swift; sourceTree = "<group>"; };
+		F4D3CB6A21CF07B2001582F2 /* FileProviderExtension+Actions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileProviderExtension+Actions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,6 +137,7 @@
 			isa = PBXGroup;
 			children = (
 				48CAD73E21C6C14900F10C87 /* FileProviderExtension.swift */,
+				F4D3CB6A21CF07B2001582F2 /* FileProviderExtension+Actions.swift */,
 				48CAD74021C6C14900F10C87 /* FileProviderItem.swift */,
 				48CAD74221C6C14900F10C87 /* FileProviderEnumerator.swift */,
 				48CAD74421C6C14900F10C87 /* Info.plist */,
@@ -295,6 +298,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4D3CB6B21CF07B2001582F2 /* FileProviderExtension+Actions.swift in Sources */,
 				48CAD73F21C6C14900F10C87 /* FileProviderExtension.swift in Sources */,
 				48CAD74121C6C14900F10C87 /* FileProviderItem.swift in Sources */,
 				48CAD75921C6FB6800F10C87 /* Dictionary+QueryParams.swift in Sources */,
