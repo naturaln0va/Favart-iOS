@@ -43,7 +43,8 @@ final class NetworkRequest: Operation {
     var resultError: Error?
     
     var getParams: [String: Any] = [:]
-    var postParams: [String: Any] = [:]
+    var jsonParams: [String: Any] = [:]
+    var formParams: [String: Any] = [:]
     var sessionConfiguration: URLSessionConfiguration = .default
     
     private var sessionTask: URLSessionTask?
@@ -103,11 +104,20 @@ extension NetworkRequest {
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
         
-        if let jsonPostData = try? JSONSerialization.data(withJSONObject: postParams, options: []), postParams.count > 0 {
+        if let jsonPostData = try? JSONSerialization.data(withJSONObject: jsonParams, options: []), !jsonParams.isEmpty {
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             request.setValue("\(jsonPostData.count)", forHTTPHeaderField: "Content-Length")
             request.httpBody = jsonPostData
-            log(info: "Post Body: \(postParams)")
+            log(info: "JSON Post Body: \(jsonParams)")
+        }
+        else if !formParams.isEmpty {
+            let formValue = formParams.stringFromHttpParameters()
+            
+            request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+            request.setValue("\(formValue.count)", forHTTPHeaderField: "Content-Length")
+            request.httpBody = formValue.data(using: .utf8)
+
+            log(info: "Form Post Body: \(formParams)")
         }
         
         sessionTask = internalURLSession.dataTask(with: request)

@@ -92,15 +92,33 @@ final class NetworkClient {
             
             let decoder = JSONDecoder()
             
-            do {
-                items = try decoder.decode([FileInfo].self, from: request.resultData)
-            }
-            catch let parseError {
-                error = self.errorFrom(request: request) ?? parseError
+            if !request.resultData.isEmpty {
+                do {
+                    items = try decoder.decode([FileInfo].self, from: request.resultData)
+                }
+                catch let parseError {
+                    error = self.errorFrom(request: request) ?? parseError
+                }
             }
             
             DispatchQueue.main.async {
                 completion(items, error)
+            }
+        }
+        
+        requestsQueue.addOperation(request)
+    }
+    
+    func createMedia(at path: String, completion: BasicCompletionBlock?) {
+        let request = NetworkRequest(.post, urlString: mediaURLString)
+        
+        request.formParams = [
+            "path": path
+        ]
+
+        request.completionBlock = {
+            DispatchQueue.main.async {
+                completion?(self.errorFrom(request: request))
             }
         }
         

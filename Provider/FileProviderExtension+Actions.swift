@@ -36,31 +36,61 @@ extension FileProviderExtension {
         
         completionHandler(item, nil)
         
+        var pathComps = [String]()
+        if let basePath = path?.replacingOccurrences(of: "+", with: "/") {
+            pathComps.append(basePath)
+        }
+        pathComps.append(info.name)
+        let fullPath = pathComps.joined(separator: "/")
+        
         fileCoordinator.coordinate(readingItemAt: fileURL, options: .withoutChanges, error: nil) { url in
-            let basePath = path?.replacingOccurrences(of: "+", with: "/") ?? ""
-            let fullPath = [basePath, info.name].joined(separator: "/")
-            
             guard let fileData = try? Data(contentsOf: url) else {
                 return
             }
             
             NetworkClient.shared.uploadFile(from: fileData, to: fullPath) { error in
-                if let e = error {
-                    print("Error uploading file: \(e.localizedDescription)")
-                }
-                else {
-                    NSFileProviderManager.default.signalEnumerator(for: item.itemIdentifier) { error in
-                        guard let e = error else {
-                            return
-                        }
-                        
-                        print("Error signaling file enumerator: \(e.localizedDescription)")
-                    }
-                }
+                self.handleCompletedRequest(with: error, for: item.itemIdentifier)
             }
         }
         
         fileURL.stopAccessingSecurityScopedResource()
+    }
+    
+    override func createDirectory(withName directoryName: String, inParentItemIdentifier parentItemIdentifier: NSFileProviderItemIdentifier, completionHandler: @escaping (NSFileProviderItem?, Error?) -> Void) {
+        let parent = parentItemIdentifier.rawValue.base64Decoded
+        let path: String? = parentItemIdentifier == .rootContainer ? nil : parent
+
+        let item = FileProviderItem(name: directoryName, parent: path)
+        
+        completionHandler(item, nil)
+        
+        var pathComps = [String]()
+        if let basePath = path?.replacingOccurrences(of: "+", with: "/") {
+            pathComps.append(basePath)
+        }
+        pathComps.append(directoryName)
+        let fullPath = pathComps.joined(separator: "/")
+
+        NetworkClient.shared.createMedia(at: fullPath) { error in
+            self.handleCompletedRequest(with: error, for: item.itemIdentifier)
+        }
+    }
+    
+    // MARK: - Helpers
+    
+    private func handleCompletedRequest(with error: Error?, for identifier: NSFileProviderItemIdentifier) {
+        if let e = error {
+            print("Error uploading file: \(e.localizedDescription)")
+        }
+        else {
+            NSFileProviderManager.default.signalEnumerator(for: identifier) { error in
+                guard let e = error else {
+                    return
+                }
+                
+                print("Error signaling file enumerator: \(e.localizedDescription)")
+            }
+        }
     }
     
 }
