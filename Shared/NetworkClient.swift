@@ -34,13 +34,14 @@ final class NetworkClient {
   typealias BasicCompletionBlock = (Error?) -> Void
   typealias MediaCompletionBlock = ([FileInfo], Error?) -> Void
   
-  private static let baseURLString = "https://pure-lake-51086.herokuapp.com"
+  #warning("Add your Heroku URL here.")
+  private static let baseURLString = ""
   
   private var mediaURLString: String {
     return [NetworkClient.baseURLString, "media"].joined(separator: "/")
   }
   
-  private let underlyingRequestQueue = DispatchQueue(label: "favart.networking")
+  private let underlyingRequestQueue = DispatchQueue(label: "com.razware.sample.favart.networking")
   
   private lazy var requestsQueue: OperationQueue = {
     let queue = OperationQueue()
