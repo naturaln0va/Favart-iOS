@@ -29,10 +29,6 @@
 import FileProvider
 
 class FileProviderExtension: NSFileProviderExtension {
-  private enum FileError: Error {
-    case unexpectedProviderItem
-  }
-  
   private lazy var fileManager = FileManager()
   
   internal lazy var fileCoordinator: NSFileCoordinator = {
@@ -143,10 +139,10 @@ class FileProviderExtension: NSFileProviderExtension {
             throw NSError(domain: NSCocoaErrorDomain, code: NSFeatureUnsupportedError, userInfo:[:])
           }
         } else {
-          throw FileError.unexpectedProviderItem
+          throw NSFileProviderError(.noSuchItem)
         }
       } catch {
-        throw FileError.unexpectedProviderItem
+        throw NSFileProviderError(.noSuchItem)
       }
     }
   }
