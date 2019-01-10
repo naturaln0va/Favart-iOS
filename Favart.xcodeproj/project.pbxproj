@@ -25,6 +25,8 @@
 		48CAD75921C6FB6800F10C87 /* Dictionary+QueryParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CAD75721C6FB6800F10C87 /* Dictionary+QueryParams.swift */; };
 		48CAD75D21C6FC2400F10C87 /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CAD75C21C6FC2400F10C87 /* NetworkClient.swift */; };
 		48CAD75E21C6FC2400F10C87 /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CAD75C21C6FC2400F10C87 /* NetworkClient.swift */; };
+		F4A2133521E6C66500275D02 /* Favart.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F4A2133421E6C66500275D02 /* Favart.xcconfig */; };
+		F4A2133621E6C66500275D02 /* Favart.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F4A2133421E6C66500275D02 /* Favart.xcconfig */; };
 		F4CAEEA321C7458A009E677B /* FileInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CAEEA221C7458A009E677B /* FileInfo.swift */; };
 		F4CAEEA421C7458A009E677B /* FileInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CAEEA221C7458A009E677B /* FileInfo.swift */; };
 		F4D3CB6B21CF07B2001582F2 /* FileProviderExtension+Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D3CB6A21CF07B2001582F2 /* FileProviderExtension+Actions.swift */; };
@@ -73,6 +75,7 @@
 		48CAD75421C6FB3E00F10C87 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		48CAD75721C6FB6800F10C87 /* Dictionary+QueryParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+QueryParams.swift"; sourceTree = "<group>"; };
 		48CAD75C21C6FC2400F10C87 /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
+		F4A2133421E6C66500275D02 /* Favart.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Favart.xcconfig; sourceTree = "<group>"; };
 		F4CAEEA221C7458A009E677B /* FileInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileInfo.swift; sourceTree = "<group>"; };
 		F4D3CB6A21CF07B2001582F2 /* FileProviderExtension+Actions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileProviderExtension+Actions.swift"; sourceTree = "<group>"; };
 		F4D3CB6C21CF2EDB001582F2 /* ViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
@@ -99,6 +102,7 @@
 		482985F521C6BFCA0058F246 = {
 			isa = PBXGroup;
 			children = (
+				F4A2133321E6C63500275D02 /* Configuration */,
 				4829860021C6BFCA0058F246 /* Favart */,
 				48CAD74D21C6F8B700F10C87 /* Shared */,
 				48CAD73D21C6C14900F10C87 /* Provider */,
@@ -176,6 +180,14 @@
 				48CAD75721C6FB6800F10C87 /* Dictionary+QueryParams.swift */,
 			);
 			name = Extensions;
+			sourceTree = "<group>";
+		};
+		F4A2133321E6C63500275D02 /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				F4A2133421E6C66500275D02 /* Favart.xcconfig */,
+			);
+			path = Configuration;
 			sourceTree = "<group>";
 		};
 		F4CAEEA121C74575009E677B /* Models */ = {
@@ -270,6 +282,7 @@
 				4829860C21C6BFCB0058F246 /* LaunchScreen.storyboard in Resources */,
 				F4D3CB6D21CF2EDC001582F2 /* ViewController.xib in Resources */,
 				4829860921C6BFCB0058F246 /* Assets.xcassets in Resources */,
+				F4A2133521E6C66500275D02 /* Favart.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -277,6 +290,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4A2133621E6C66500275D02 /* Favart.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -465,7 +479,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.razware.Favart;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.razware.sample.favart${SAMPLE_CODE_DISAMBIGUATOR}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -484,7 +498,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.razware.Favart;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.razware.sample.favart${SAMPLE_CODE_DISAMBIGUATOR}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -503,7 +517,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.razware.Favart.Provider;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.razware.sample.favart.provider${SAMPLE_CODE_DISAMBIGUATOR}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 4.2;
@@ -523,7 +537,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.razware.Favart.Provider;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.razware.sample.favart.provider${SAMPLE_CODE_DISAMBIGUATOR}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 4.2;
