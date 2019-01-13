@@ -100,10 +100,6 @@ extension FileProviderItem {
     return NSFileProviderItemIdentifier(parent.base64Encoded)
   }
   
-  var capabilities: NSFileProviderItemCapabilities {
-    return .allowsAll
-  }
-  
   var filename: String {
     return name
   }
@@ -129,6 +125,21 @@ extension FileProviderItem {
     }
   }
   
+  var capabilities: NSFileProviderItemCapabilities {
+    let baseCapabilities: NSFileProviderItemCapabilities = [
+      .allowsReading,
+      .allowsTrashing,
+      ]
+    
+    if isDirectory {
+      return baseCapabilities.union(
+        [.allowsContentEnumerating, .allowsAddingSubItems]
+      )
+    } else {
+      return baseCapabilities
+    }
+  }
+
   var documentSize: NSNumber? {
     guard let size = size else {
       return nil

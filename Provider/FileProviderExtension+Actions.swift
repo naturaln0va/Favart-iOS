@@ -28,21 +28,7 @@
 
 import FileProvider
 
-extension FileProviderExtension {
-  override func setLastUsedDate(_ lastUsedDate: Date?, forItemIdentifier itemIdentifier: NSFileProviderItemIdentifier, completionHandler: @escaping (NSFileProviderItem?, Error?) -> Void) {
-    do {
-      guard let item = try item(for: itemIdentifier) as? FileProviderItem else {
-        completionHandler(nil, NSFileProviderError(.noSuchItem))
-        return
-      }
-      
-      item.lastUsedDate = lastUsedDate
-      completionHandler(item, nil)
-    } catch {
-      completionHandler(nil, NSFileProviderError(.noSuchItem))
-    }
-  }
-  
+extension FileProviderExtension {  
   override func importDocument(at fileURL: URL, toParentItemIdentifier parentItemIdentifier: NSFileProviderItemIdentifier, completionHandler: @escaping (NSFileProviderItem?, Error?) -> Void) {
     if fileURL.startAccessingSecurityScopedResource() == false {
       completionHandler(nil, NSFileProviderError(.noSuchItem))
@@ -110,13 +96,6 @@ extension FileProviderExtension {
       
       item.isTrashed = true
       completionHandler(item, nil)
-      
-      guard let url = urlForItem(withPersistentIdentifier: itemIdentifier) else {
-        completionHandler(nil, NSFileProviderError(.noSuchItem))
-        return
-      }
-      
-      try FileManager.default.removeItem(at: url)
       
       NetworkClient.shared.removeMedia(at: itemIdentifier.rawValue.base64Decoded.replacingOccurrences(of: "+", with: "/")) { error in
         self.handleCompletedRequest(with: error, for: item.itemIdentifier)

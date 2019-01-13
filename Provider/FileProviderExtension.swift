@@ -31,12 +31,6 @@ import FileProvider
 class FileProviderExtension: NSFileProviderExtension {
   private lazy var fileManager = FileManager()
   
-  internal lazy var fileCoordinator: NSFileCoordinator = {
-    let coordinator = NSFileCoordinator()
-    coordinator.purposeIdentifier = NSFileProviderManager.default.providerIdentifier
-    return coordinator
-  }()
-  
   override func item(for identifier: NSFileProviderItemIdentifier) throws -> NSFileProviderItem {
     if identifier == .rootContainer {
       return FileProviderItem.rootItem
@@ -97,6 +91,11 @@ class FileProviderExtension: NSFileProviderExtension {
   }
   
   override func startProvidingItem(at url: URL, completionHandler: @escaping ((_ error: Error?) -> Void)) {
+    guard !fileManager.fileExists(atPath: url.path) else {
+      completionHandler(NSFileProviderError(.noSuchItem))
+      return
+    }
+    
     guard let identifier = persistentIdentifierForItem(at: url) else {
       completionHandler(NSFileProviderError(.noSuchItem))
       return
@@ -104,17 +103,13 @@ class FileProviderExtension: NSFileProviderExtension {
     
     let path = identifier.rawValue.base64Decoded.replacingOccurrences(of: "+", with: "/")
     
-    if !fileManager.fileExists(atPath: url.path) {
-      NetworkClient.shared.downloadFile(at: path, to: url) { error in
-        completionHandler(error)
-      }
-    } else {
-      completionHandler(nil)
+    NetworkClient.shared.downloadFile(at: path, to: url) { error in
+      completionHandler(error)
     }
   }
   
   override func stopProvidingItem(at url: URL) {
-    try? FileManager.default.removeItem(at: url)
+    try? fileManager.removeItem(at: url)
     
     providePlaceholder(at: url) { error in
       guard let e = error else {
@@ -128,23 +123,19 @@ class FileProviderExtension: NSFileProviderExtension {
   // MARK: - Enumeration
   
   override func enumerator(for containerItemIdentifier: NSFileProviderItemIdentifier) throws -> NSFileProviderEnumerator {
-    if containerItemIdentifier == .rootContainer {
+    guard containerItemIdentifier != .rootContainer else {
       return FileProviderEnumerator(identifier: containerItemIdentifier)
-    } else {
-      do {
-        if let providerItem = try item(for: containerItemIdentifier) as? FileProviderItem {
-          if providerItem.isDirectory {
-            return FileProviderEnumerator(identifier: containerItemIdentifier)
-          } else {
-            throw NSError(domain: NSCocoaErrorDomain, code: NSFeatureUnsupportedError, userInfo:[:])
-          }
-        } else {
-          throw NSFileProviderError(.noSuchItem)
-        }
-      } catch {
-        throw NSFileProviderError(.noSuchItem)
-      }
     }
+    
+    do {
+      if let providerItem = try item(for: containerItemIdentifier) as? FileProviderItem, providerItem.isDirectory {
+        return FileProviderEnumerator(identifier: containerItemIdentifier)
+      }
+    } catch {
+      print("Item parse error: \(error.localizedDescription).")
+    }
+    
+    throw NSFileProviderError(.noSuchItem)
   }
   
   override func fetchThumbnails(for itemIdentifiers: [NSFileProviderItemIdentifier], requestedSize size: CGSize, perThumbnailCompletionHandler: @escaping (NSFileProviderItemIdentifier, Data?, Error?) -> Void, completionHandler: @escaping (Error?) -> Void) -> Progress {
